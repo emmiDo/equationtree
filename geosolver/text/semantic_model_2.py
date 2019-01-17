@@ -59,7 +59,7 @@ class SemanticModel(object):
             for curr_rule_index in range(len(rules)):
                 curr_denom_vectors = denom_vectors_list[curr_rule_index]
                 dist = _get_log_distribution(weights, curr_denom_vectors)
-                for num_index, logp in dist.iteritems():
+                for num_index, logp in dist.items():
                     out -= np.exp(dist[num_index])*curr_denom_vectors[num_index]
             return out
 

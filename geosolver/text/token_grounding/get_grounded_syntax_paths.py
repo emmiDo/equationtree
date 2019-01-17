@@ -15,7 +15,7 @@ def get_grounded_syntax_paths(grounded_syntax, from_token, to_token):
     assert isinstance(from_token, Token)
     assert isinstance(to_token, Token)
     all_token_paths = {}
-    for rank, grounded_syntax_tree in grounded_syntax.grounded_syntax_trees.iteritems():
+    for rank, grounded_syntax_tree in grounded_syntax.grounded_syntax_trees.items():
         paths = []
         neutralized_graph = nx.Graph(grounded_syntax_tree.graph)
         if from_token == to_token:

@@ -133,7 +133,7 @@ class SemanticModel(object):
         distribution = self.get_log_distribution(rule.words, rule.syntax_tree, rule.tags, rule.parent_index,
                                                  rule.parent_signature, excluding_indices)
         log_grad = self.feature_function.evaluate(rule) - sum(np.exp(logp) * self.feature_function.evaluate(each_rule)
-                                                     for each_rule, logp in distribution.iteritems())
+                                                     for each_rule, logp in distribution.items())
         return log_grad
 
     def get_possible_rules(self, words, syntax_tree, tags, parent_index, parent_signature, excluding_indices=set()):

@@ -8,7 +8,7 @@ def get_type_relations(from_type, to_grounded_token):
                                         from_type, to_grounded_token.ground)
 
     type_relations = {}
-    for key, ontology_path in ontology_paths.iteritems():
+    for key, ontology_path in ontology_paths.items():
         type_relation = TypeRelation(from_type, to_grounded_token, ontology_path)
         type_relations[key] = type_relation
 

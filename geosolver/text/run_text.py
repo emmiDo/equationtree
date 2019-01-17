@@ -18,7 +18,7 @@ __author__ = 'minjoon'
 
 def replace(words):
     new_words = {}
-    for index, word in words.iteritems():
+    for index, word in words.items():
         if word == "=":
             new_words[index] = 'equals'
         elif word == "+":
@@ -28,29 +28,29 @@ def replace(words):
     return new_words
 
 def get_models():
-    query = "annotated"
+    query = "all/"
     print ("Obtaining questions and semantic annotations...")
-    questions = geoserver_interface.download_questions([query])
-    semantics = geoserver_interface.download_semantics([query])
+    questions = geoserver_interface.download_questions(query)
+    semantics = geoserver_interface.download_semantics(query)
 
     print ("Obtaining syntax trees...")
-    if False:
+    if True:
         syntax_trees = {pk: {sentence_index: stanford_parser.get_best_syntax_tree(replace(words))
-                             for sentence_index, words in question.words.iteritems()}
-                        for pk, question in questions.iteritems()}
+                             for sentence_index, words in question.words.items()}
+                        for pk, question in questions.items()}
         pickle.dump(syntax_trees, open("syntax_trees.p", 'wb'))
     else:
         syntax_trees = pickle.load(open("syntax_trees.p", 'rb'))
 
     print ("Obtaining nodes...")
-    nodes = {pk: {sentence_index: [annotation_to_node(annotation) for _, annotation in annotations.iteritems()]
-                  for sentence_index, annotations in d.iteritems()}
-             for pk, d in semantics.iteritems()}
+    nodes = {pk: {sentence_index: [annotation_to_node(annotation) for _, annotation in annotations.items()]
+                  for sentence_index, annotations in d.items()}
+             for pk, d in semantics.items()}
 
     print ("Extracting tag rules...")
     tag_rules = []
-    for pk, d in nodes.iteritems():
-        for sentence_index, dd in d.iteritems():
+    for pk, d in nodes.items():
+        for sentence_index, dd in d.items():
             syntax_tree = syntax_trees[pk][sentence_index]
             for node in dd:
                 local_tag_rules = node_to_tag_rules(syntax_tree.words, syntax_tree, node)
@@ -62,8 +62,8 @@ def get_models():
     print ("Extracting semantic rules...")
     unary_rules = []
     binary_rules = []
-    for pk, d in nodes.iteritems():
-        for sentence_index, dd in d.iteritems():
+    for pk, d in nodes.items():
+        for sentence_index, dd in d.items():
             syntax_tree = syntax_trees[pk][sentence_index]
             for node in dd:
                 local_unary_rules, local_binary_rules = node_to_semantic_rules(syntax_tree.words, syntax_tree, tag_model, node, lift_index=True)
@@ -91,20 +91,20 @@ def get_models():
 
 def test_models(tag_model, unary_model, binary_model):
     print("Testing the model...")
-    query = "annotated"
-    questions = geoserver_interface.download_questions([query])
-    semantics = geoserver_interface.download_semantics([query])
+    query = "all/"
+    questions = geoserver_interface.download_questions(query)
+    semantics = geoserver_interface.download_semantics(query)
     all_gt_nodes = {}
     all_my_node_dict = {}
     reweighed_my_dict = {}
 
     sizes = []
 
-    for pk, question in questions.iteritems():
+    for pk, question in questions.items():
         all_gt_nodes[pk] = {}
         all_my_node_dict[pk] = {}
         reweighed_my_dict[pk] = {}
-        for sentence_index, words in question.words.iteritems():
+        for sentence_index, words in question.words.items():
             all_gt_nodes[pk][sentence_index] = set(annotation_to_node(annotation) for annotation in semantics[pk][sentence_index].values())
             all_my_node_dict[pk][sentence_index] = {}
             reweighed_my_dict[pk][sentence_index] = {}
@@ -148,8 +148,8 @@ def get_pr_by_rank(all_gt_nodes, all_my_node_dict, rank):
     relevant = 0
     intersection = 0
 
-    for pk, question in all_gt_nodes.iteritems():
-        for index, curr_gt_nodes in question.iteritems():
+    for pk, question in all_gt_nodes.items():
+        for index, curr_gt_nodes in question.items():
             curr_my_node_dict = all_my_node_dict[pk][index]
             my_nodes = set([y[0] for y in sorted(curr_my_node_dict.items(), key=lambda x: -x[1])][:rank])
             intersection_set = curr_gt_nodes.intersection(my_nodes)
@@ -176,10 +176,10 @@ def get_pr(all_gt_nodes, all_my_node_dict, threshold):
     relevant = 0
     intersection = 0
 
-    for pk, question in all_gt_nodes.iteritems():
-        for index, curr_gt_nodes in question.iteritems():
+    for pk, question in all_gt_nodes.items():
+        for index, curr_gt_nodes in question.items():
             curr_my_node_dict = all_my_node_dict[pk][index]
-            my_nodes = set(node for node, prob in curr_my_node_dict.iteritems() if prob >= threshold)
+            my_nodes = set(node for node, prob in curr_my_node_dict.items() if prob >= threshold)
             intersection_set = curr_gt_nodes.intersection(my_nodes)
             retrieved += len(my_nodes)
             relevant += len(curr_gt_nodes)
@@ -201,7 +201,7 @@ def get_pr(all_gt_nodes, all_my_node_dict, threshold):
 
 def get_coverage(words, syntax_tree, tag_model, nodes):
     all_indices = set()
-    for index, word in words.iteritems():
+    for index, word in words.items():
         dist = tag_model.get_log_distribution(word)
         if None not in dist or dist[None] < 0:
             all_indices.add(index)
@@ -216,7 +216,7 @@ def get_coverage(words, syntax_tree, tag_model, nodes):
 
 def reweigh(words, syntax_tree, tags, node_dict):
     new_dict = {}
-    for node, prob in node_dict.iteritems():
+    for node, prob in node_dict.items():
         coverage = get_coverage(words, syntax_tree, tags, [node])
         new_dict[node] = prob * coverage
 

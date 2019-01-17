@@ -55,7 +55,7 @@ def _add_type_relations(grounded_syntax, forest_graph, implied_parent_functions,
     for type_ in basic_ontology.types.values():
         for function_container in grounded_tokens.values() + implied_parent_functions.values():
             type_relations = get_type_relations(type_, function_container)
-            for key, type_relation in type_relations.iteritems():
+            for key, type_relation in type_relations.items():
                 syntax_cost = 0
                 ontology_cost = get_ontology_path_cost(type_relation.ontology_path)
                 if ontology_cost <= ontology_threshold:
@@ -83,7 +83,7 @@ def _add_semantic_relations(grounded_syntax, forest_graph, syntax_threshold, ont
             continue
         for arg_idx in range(from_token.ground.valence):
             semantic_relations = get_semantic_relations(grounded_syntax, from_token, to_token, arg_idx)
-            for key, semantic_relation in semantic_relations.iteritems():
+            for key, semantic_relation in semantic_relations.items():
                 syntax_cost, ontology_cost = get_semantic_relation_cost(semantic_relation)
                 if syntax_cost <= syntax_threshold and ontology_cost <= ontology_threshold:
                     forest_graph.add_edge(from_token.key, to_token.key, key=key,

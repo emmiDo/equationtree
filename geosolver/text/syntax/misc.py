@@ -15,7 +15,7 @@ def syntax_display_graphs(syntax):
 
 
 def syntax_save_graphs(syntax, root_path):
-    for idx, syntax_tree in syntax.syntax_trees.iteritems():
+    for idx, syntax_tree in syntax.syntax_trees.items():
         file_name = "%s.png" % get_number_string(idx, 2)
         full_path = os.path.join(root_path, file_name)
         save_graph_image(syntax_tree.graph, full_path)

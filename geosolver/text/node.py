@@ -20,6 +20,8 @@ class Node(object):
             assert len(self.children) == 0
         else:
             for idx, child in enumerate(self.children):
+                print (idx)
+                print (child.function_signature.return_type + " " + self.function_signature.arg_types[idx])
                 assert issubtype(child.function_signature.return_type, self.function_signature.arg_types[idx])
 
     def get_index(self, lift_index=False):

@@ -93,7 +93,7 @@ entries = [
 new_entries = []
 for entry in entries:
     if 'forms' in entry:
-        for pos, lemma in entry['forms'].iteritems():
+        for pos, lemma in entry['forms'].items():
             new_entry = {'lemma': lemma, 'pos': pos, 'lexemes': entry['lexemes']}
             new_entries.append(new_entry)
     new_entries.append(entry)

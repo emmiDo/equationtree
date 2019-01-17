@@ -44,22 +44,22 @@ class TopDownNaiveDecoder(Decoder):
                 distribution = self.unary_semantic_model.get_log_distribution(words, syntax_tree, tag_model,
                                                                               unary_rule.child_index, unary_rule.child_signature, excluding_indices)
                 child_nodes = {}
-                for current_unary_rule, logp in distribution.iteritems():
-                    for node, logq in _recurse_unary(current_unary_rule, logp, excluding_indices).iteritems():
+                for current_unary_rule, logp in distribution.items():
+                    for node, logq in _recurse_unary(current_unary_rule, logp, excluding_indices).items():
                         log_add(child_nodes, node, logq)
             elif unary_rule.child_signature.is_binary():
                 distribution = self.binary_semantic_model.get_log_distribution(words, syntax_tree, tag_model,
                                                                                unary_rule.child_index, unary_rule.child_signature, excluding_indices)
                 child_nodes = {}
-                for current_binary_rule, logp in distribution.iteritems():
-                    for node, logq in _recurse_binary(current_binary_rule, logp, excluding_indices).iteritems():
+                for current_binary_rule, logp in distribution.items():
+                    for node, logq in _recurse_binary(current_binary_rule, logp, excluding_indices).items():
                         log_add(child_nodes, node, logq)
 
             if len(child_nodes) == 0:
                 return {}
 
             parent_nodes = {Node(unary_rule.parent_index, unary_rule.parent_signature, [child_node]): top_logp + logp
-                            for child_node, logp in child_nodes.iteritems()}
+                            for child_node, logp in child_nodes.items()}
             return parent_nodes
 
         def _recurse_binary(binary_rule, top_logp, excluding_indices):
@@ -73,15 +73,15 @@ class TopDownNaiveDecoder(Decoder):
                 distribution = self.unary_semantic_model.get_log_distribution(words, syntax_tree, tag_model,
                                                                               binary_rule.a_index, binary_rule.a_signature, excluding_indices)
                 a_nodes = {}
-                for current_unary_rule, logp in distribution.iteritems():
-                    for node, logq in _recurse_unary(current_unary_rule, logp, excluding_indices).iteritems():
+                for current_unary_rule, logp in distribution.items():
+                    for node, logq in _recurse_unary(current_unary_rule, logp, excluding_indices).items():
                         log_add(a_nodes, node, logq)
             elif binary_rule.a_signature.is_binary():
                 distribution = self.binary_semantic_model.get_log_distribution(words, syntax_tree, tag_model,
                                                                                binary_rule.a_index, binary_rule.a_signature, excluding_indices)
                 a_nodes = {}
-                for current_binary_rule, logp in distribution.iteritems():
-                    for node, logq in _recurse_binary(current_binary_rule, logp, excluding_indices).iteritems():
+                for current_binary_rule, logp in distribution.items():
+                    for node, logq in _recurse_binary(current_binary_rule, logp, excluding_indices).items():
                         log_add(a_nodes, node, logq)
 
             if binary_rule.b_signature.is_leaf():
@@ -90,15 +90,15 @@ class TopDownNaiveDecoder(Decoder):
                 distribution = self.unary_semantic_model.get_log_distribution(words, syntax_tree, tag_model,
                                                                               binary_rule.b_index, binary_rule.b_signature, excluding_indices)
                 b_nodes = {}
-                for current_unary_rule, logp in distribution.iteritems():
-                    for node, logq in _recurse_unary(current_unary_rule, logp, excluding_indices).iteritems():
+                for current_unary_rule, logp in distribution.items():
+                    for node, logq in _recurse_unary(current_unary_rule, logp, excluding_indices).items():
                         log_add(b_nodes, node, logq)
             elif binary_rule.b_signature.is_binary():
                 distribution = self.binary_semantic_model.get_log_distribution(words, syntax_tree, tag_model,
                                                                                binary_rule.b_index, binary_rule.b_signature, excluding_indices)
                 b_nodes = {}
-                for current_binary_rule, logp in distribution.iteritems():
-                    for node, logq in _recurse_binary(current_binary_rule, logp, excluding_indices).iteritems():
+                for current_binary_rule, logp in distribution.items():
+                    for node, logq in _recurse_binary(current_binary_rule, logp, excluding_indices).items():
                         log_add(b_nodes, node, logq)
 
             if len(a_nodes) == 0 or len(b_nodes) == 0:
@@ -115,8 +115,8 @@ class TopDownNaiveDecoder(Decoder):
                                                                   None, function_signatures[start])
 
         nodes = {}
-        for start_unary_rule, logp in top_dist.iteritems():
-            for node, logq in _recurse_unary(start_unary_rule, logp, set([])).iteritems():
+        for start_unary_rule, logp in top_dist.items():
+            for node, logq in _recurse_unary(start_unary_rule, logp, set([])).items():
                 nodes[node] = logq
 
         return self._filter_nodes(words, syntax_tree, nodes)
@@ -124,7 +124,7 @@ class TopDownNaiveDecoder(Decoder):
 
     def _filter_nodes(self, words, syntax_tree, nodes):
         new_nodes = {}
-        for node, prob in nodes.iteritems():
+        for node, prob in nodes.items():
             visited = set()
             acceptable = True
             tag_rules = node_to_tag_rules(words, syntax_tree, node)

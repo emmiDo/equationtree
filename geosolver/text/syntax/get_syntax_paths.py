@@ -17,7 +17,7 @@ def get_syntax_paths(syntax, from_token, to_token):
     assert isinstance(from_token, Token)
     assert isinstance(to_token, Token)
     paths = {}
-    for idx, syntax_tree in syntax.syntax_trees.iteritems():
+    for idx, syntax_tree in syntax.syntax_trees.items():
         neutralized_graph = nx.Graph(syntax_tree.graph)
         if from_token == to_token:
             cycles = [cycle for cycle in nx.simple_cycles(syntax_tree.graph) if from_token.index in cycle]

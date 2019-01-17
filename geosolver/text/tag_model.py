@@ -65,7 +65,7 @@ class CountBasedTagModel(TagModel):
     def get_log_distribution(self, word):
         dist = {}
         if word in self.counter:
-            for sig, count in self.counter[word].iteritems():
+            for sig, count in self.counter[word].items():
                 if sig == self._sum_key:
                     continue
                 dist[sig] = np.log(float(count)/self.counter[word][self._sum_key])

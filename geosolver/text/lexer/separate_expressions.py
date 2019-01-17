@@ -27,7 +27,7 @@ def separate_expressions(sentence):
     extended_flags = [is_extended(sentence.values(), neighbor_flags, idx) for idx in sentence]
 
     previous_flag = False
-    for idx, word in sentence.iteritems():
+    for idx, word in sentence.items():
         if previous_flag and not extended_flags[idx]:
             """
             Exited equation.

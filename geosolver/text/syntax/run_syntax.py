@@ -1,6 +1,6 @@
 import os
 
-from geosolver.database.geoserver_interface import geoserver_interface
+from geosolver import geoserver_interface
 from geosolver.text.lexer.get_lexical_parses import get_lexical_parses
 from geosolver.text.lexer.string_to_tokens import string_to_tokens
 from geosolver.text.syntax.create_syntax import create_syntax
@@ -44,13 +44,13 @@ def test_syntax_path():
 
 
 def test_trees():
-    root_path = "/Users/minjoon/Desktop/questions2"
+    root_path = "question2"
     if not os.path.exists(root_path):
         os.mkdir(root_path)
     k = 300
     numbers = [26, 28]
     questions = geoserver_interface.download_questions(numbers)
-    for pk, question in questions.iteritems():
+    for pk, question in questions.items():
         folder_name = get_number_string(pk, 4)
         question_path = os.path.join(root_path, folder_name)
         if not os.path.exists(question_path):
